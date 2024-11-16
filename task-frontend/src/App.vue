@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import router from './router';
-</script>
-
 <template>
   <nav>
     <router-link to="/">Home</router-link> |

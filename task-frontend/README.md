@@ -1,4 +1,4 @@
-# frontend
+# task-frontend
 
 ## Project setup
 ```
