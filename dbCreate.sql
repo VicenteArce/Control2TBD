@@ -9,7 +9,7 @@ CREATE TABLE users (
 
 -- Tabla Task --
 CREATE TABLE task (
-	task_id SEIAL NOT NULL,
+	task_id SERIAL NOT NULL,
 	user_id INT NOT NULL,
 	title CHAR(50) NOT NULL,
 	description CHAR(500),
