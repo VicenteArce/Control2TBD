@@ -1,13 +1,17 @@
 package com.tbd.taskmanager.repositories;
 
+import com.tbd.taskmanager.models.TaskModel;
 import com.tbd.taskmanager.models.UsersModel;
 import com.tbd.taskmanager.utils.InputVerificationService;
 import com.tbd.taskmanager.utils.JwtMiddlewareService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
+
+import java.util.List;
 
 @Repository
 public class UsersRepositoryImp implements UsersRepository {
@@ -100,7 +104,20 @@ public class UsersRepositoryImp implements UsersRepository {
         }
     }
 
+    @Override
+    public ResponseEntity<List<Object>> getAllUsers() {
 
+        try (Connection connection = sql2o.open()) {
+            List<UsersModel> users = connection.createQuery("SELECT * FROM users")
+                    .executeAndFetch(UsersModel.class);
+            List<Object> result = (List) users;
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    List.of(e.getMessage())
+            );
+        }
+    }
 
 
     @Override

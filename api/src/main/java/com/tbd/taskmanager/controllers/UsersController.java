@@ -5,6 +5,8 @@ import com.tbd.taskmanager.services.UsersService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController("*")
 @RequestMapping("/api")
@@ -46,7 +48,10 @@ public class UsersController {
         return userService.getUserByName(name);
     }
 
-
+    @GetMapping("/user")
+    public ResponseEntity<List<Object>> getUsers() {
+        return userService.getUsers();
+    }
 
 
 }

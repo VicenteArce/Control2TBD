@@ -3,6 +3,8 @@ package com.tbd.taskmanager.repositories;
 import com.tbd.taskmanager.models.UsersModel;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface UsersRepository {
     // CRUD
     // Create
@@ -23,6 +25,8 @@ public interface UsersRepository {
     public ResponseEntity<Object> loginUser(String email, String password);
 
     public ResponseEntity<Object> getUserByName(String name);
+
+    public ResponseEntity<List<Object>> getAllUsers();
 
 
 }
