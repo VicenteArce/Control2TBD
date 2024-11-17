@@ -45,6 +45,11 @@ public class TaskService {
         return taskRepository.getTaskByUserId(user_id, token);
     }
 
+   /* public ResponseEntity<List<Object>> getTaskPendingNotified(String token){
+        return taskRepository.getTaskPendingNotified(token);
+    }
+    */
+
     // Update
     public ResponseEntity<Object> updateTask(int task_id, TaskModel task, String token){
         return taskRepository.updateTask(task_id, task, token);
@@ -54,10 +59,19 @@ public class TaskService {
         return taskRepository.completeTask(task_id, token);
     }
 
+    /*
+    public ResponseEntity<Object> notifyTask(int task_id, String token){
+        return taskRepository.notifyTask(task_id, token);
+    }
+
+     */
+
     // Delete
     public ResponseEntity<Object> deleteTask(int task_id, String token){
         return taskRepository.deleteTask(task_id, token);
     }
+
+
 
 
 }
