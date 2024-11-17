@@ -6,7 +6,12 @@
 		<p>Descripción: {{ task.description }}</p>
 		<p>Fecha de expiración: {{ task.expiration_date }}</p>
 		<p>Estado: {{ task.state }}</p>
-		<button type="submit" @click="goToEdit(task.task_id)">Editar tarea</button>
+		<button type="submit" @click="goToEdit(task.task_id)">Editar tarea </button>
+		<button type="submit" @click="deleteTask(task.task_id)">Eliminar tarea</button>
+		<div v-if="task.state !== 'completada'">
+			<button type="submit" @click="completeTask(task.task_id)">Marcar como completada
+			</button>
+		</div>	
 	</div>
 	</div>
 	<br>
@@ -45,7 +50,33 @@ export default{
 		},
 		async goToEdit(taskId){
 			this.$router.push(`/editTask/${taskId}`);
-		}
+		},
+		async completeTask(id){
+			try{
+				const token = sessionStorage.getItem('user')
+				console.log(token);
+				const response = await axios.put(`http://localhost:8080/api/task/complete/${id}`, null,
+				{ params:{
+					token: token}});
+				console.log(response.data)
+				window.location.reload();
+			} catch(error){
+				console.log(error)
+			}
+		},
+		async deleteTask(id){
+			try{
+				const token = sessionStorage.getItem('user')
+				console.log(token);
+				await axios.delete(`http://localhost:8080/api/task/${id}`, 
+				{ params:{
+					token: token}});
+				window.alert("Tarea eliminada exitosamente");	
+				window.location.reload();
+			} catch(error){
+				console.log(error)
+			}
+		},
 	}
 }
 </script>

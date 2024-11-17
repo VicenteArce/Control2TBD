@@ -27,6 +27,8 @@ public interface TaskRepository {
     // Update
     public ResponseEntity<Object> updateTask(int task_id, TaskModel task, String token);
 
+    public ResponseEntity<Object> completeTask(int task_id, String token);
+
     // Delete
     public ResponseEntity<Object> deleteTask(int task_id, String token);
 

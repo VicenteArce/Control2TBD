@@ -50,6 +50,10 @@ public class TaskService {
         return taskRepository.updateTask(task_id, task, token);
     }
 
+    public ResponseEntity<Object> completeTask(int task_id, String token){
+        return taskRepository.completeTask(task_id, token);
+    }
+
     // Delete
     public ResponseEntity<Object> deleteTask(int task_id, String token){
         return taskRepository.deleteTask(task_id, token);

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
+import java.sql.SQLException;
 
 import java.util.List;
 
@@ -175,33 +176,78 @@ public class TaskRepositoryImp implements TaskRepository {
     // Update
     @Override
     public ResponseEntity<Object> updateTask(int task_id, TaskModel task, String token) {
-        if (!InputVerificationService.validateInput(task.getTitle()) || !InputVerificationService.validateInput(task.getDescription()) || !InputVerificationService.validateInput(task.getState())) {
+        if (!InputVerificationService.validateInput(task.getTitle()) ||
+                !InputVerificationService.validateInput(task.getDescription()) ||
+                !InputVerificationService.validateInput(task.getState())) {
+            System.out.println("Invalid input detected for title, description, or state.");
             return ResponseEntity.badRequest().body("Error al crear la tarea, caracteres no permitidos en el título, descripción o estado.");
         }
-        if(jwtMiddlewareService.validateToken(token)){
-            try(Connection connection = sql2o.open()){
-                connection.getJdbcConnection().setAutoCommit(false);
-                connection.createQuery("UPDATE task SET user_id = :user_id, title = :title, description = :description, date_of_expire = :expiration_date, state = :state WHERE task_id = :task_id")
+
+        if (jwtMiddlewareService.validateToken(token)) {
+            System.out.println("Token validated successfully.");
+
+            try (Connection connection = sql2o.open()) {
+
+                System.out.println("Executing update query for task_id: " + task_id);
+
+                connection.createQuery("UPDATE task SET user_id = :user_id, title = :title, description = :description, expiration_date = :expiration_date, state = :state WHERE task_id = :task_id")
                         .addParameter("user_id", task.getUser_id())
                         .addParameter("title", task.getTitle())
                         .addParameter("description", task.getDescription())
                         .addParameter("expiration_date", task.getExpiration_date())
                         .addParameter("state", task.getState())
-                        .addParameter("task_id", task_id)
+                        .addParameter("task_id", task.getTask_id())
                         .executeUpdate();
-                connection.commit();
+
+                System.out.println("Task update successful.");
                 return ResponseEntity.ok(task);
             }catch(Exception e){
-                try (Connection connection = sql2o.open()) {
-                    connection.rollback();
-                } catch (Exception rollbackException) {
-                    e.addSuppressed(rollbackException);
-                }
-                return ResponseEntity.status(500).body("Error al actualizar la tarea: " + e.getMessage());
+                return ResponseEntity.status(500).body(e.getMessage());
             }
         }
+
+        System.out.println("Unauthorized access attempt.");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se encuentra autorizado");
     }
+
+    @Override
+    public ResponseEntity<Object> completeTask(int task_id, String token) {
+        System.out.println(task_id);
+        System.out.println(token);
+
+        if (jwtMiddlewareService.validateToken(token)) {
+            System.out.println("Token validated successfully.");
+
+            try (Connection connection = sql2o.open()) {
+
+                System.out.println("Executing update query for task_id: " + task_id);
+
+                String state = "completada";
+
+                connection.createQuery("UPDATE task SET  state = :state WHERE task_id = :task_id")
+                        .addParameter("state", state)
+                        .addParameter("task_id", task_id)
+                        .executeUpdate();
+
+                System.out.println("Task update successful.");
+                TaskModel task = connection.createQuery("SELECT * FROM task WHERE task_id = :task_id")
+                        .addParameter("task_id", task_id)
+                        .executeAndFetchFirst(TaskModel.class);
+                if (task != null) {
+                    return ResponseEntity.ok(task);
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            }catch(Exception e){
+                return ResponseEntity.status(500).body(e.getMessage());
+            }
+        }
+
+        System.out.println("Unauthorized access attempt.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se encuentra autorizado");
+    }
+
+
 
     // Delete
     @Override

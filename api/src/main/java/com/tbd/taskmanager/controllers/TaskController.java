@@ -33,6 +33,13 @@ public class TaskController {
         return taskService.updateTask(task_id, task, token);
     }
 
+    @PutMapping("/task/complete/{task_id}")
+    public ResponseEntity<Object> completeTask(@PathVariable int task_id, @RequestParam String token) {
+        System.out.println(task_id);
+        System.out.println(token);
+        return taskService.completeTask(task_id, token);
+    }
+
     @DeleteMapping("/task/{task_id}")
     public ResponseEntity<Object> deleteTask(@PathVariable int task_id, @RequestParam String token) {
         return taskService.deleteTask(task_id, token);
