@@ -10,6 +10,9 @@ public class TaskModel {
     private String expiration_date;
     private String state;
 
+    private boolean notificada; // Atributo para saber si la tarea ya fue notificada
+
+
     // Default constructor
     public TaskModel() {
     }
@@ -22,6 +25,7 @@ public class TaskModel {
         this.description = description;
         this.expiration_date = expiration_date;
         this.state = state;
+       // this.notificada = false;
     }
 
     // Getters
@@ -48,7 +52,11 @@ public class TaskModel {
     public String getState() {
         return state;
     }
-
+/*
+    public boolean isNotificada() {
+        return notificada;
+    }
+*/
     // Setters
     public void setTask_id(int task_id) {
         this.task_id = task_id;
@@ -73,4 +81,11 @@ public class TaskModel {
     public void setState(String state) {
         this.state = state;
     }
+
+    /*
+    public void setNotificada(boolean notificada) {
+        this.notificada = notificada;
+    }
+    */
+
 }

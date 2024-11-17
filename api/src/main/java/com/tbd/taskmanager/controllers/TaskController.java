@@ -70,4 +70,12 @@ public class TaskController {
         return taskService.getTaskByUserId(user_id, token);
     }
 
+    /*
+    @GetMapping("/check-notifications")
+    public ResponseEntity<List<Object>> getTasksForNotification(@RequestParam String token) {
+        return taskService.getTaskPendingNotified(token);
+    }
+    */
+
 }
+
