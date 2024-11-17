@@ -32,6 +32,8 @@
 
 <script>
 import axios from "axios";
+import {auth} from "@/services/authService";
+import { jwtDecode } from "jwt-decode";
 
 export default {
   name: "LoginView",
@@ -50,8 +52,12 @@ export default {
       try {
         const response = await axios.post("http://localhost:8080/api/user/login", this.user);
         if (response.status === 200) {
+					const token = response.data;
+          const data = jwtDecode(token);
+					console.log(data)
           this.message = "Inicio de sesión exitoso. ¡Bienvenido!";
           this.success = true;
+          auth.login(data.user_id, token)
           this.$router.push("/");
         } else {
           this.message = "Nombre de usuario o contraseña incorrectos.";

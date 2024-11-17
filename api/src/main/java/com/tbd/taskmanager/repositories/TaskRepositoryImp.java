@@ -180,6 +180,7 @@ public class TaskRepositoryImp implements TaskRepository {
         }
         if(jwtMiddlewareService.validateToken(token)){
             try(Connection connection = sql2o.open()){
+                connection.getJdbcConnection().setAutoCommit(false);
                 connection.createQuery("UPDATE task SET user_id = :user_id, title = :title, description = :description, date_of_expire = :expiration_date, state = :state WHERE task_id = :task_id")
                         .addParameter("user_id", task.getUser_id())
                         .addParameter("title", task.getTitle())
@@ -188,9 +189,15 @@ public class TaskRepositoryImp implements TaskRepository {
                         .addParameter("state", task.getState())
                         .addParameter("task_id", task_id)
                         .executeUpdate();
+                connection.commit();
                 return ResponseEntity.ok(task);
             }catch(Exception e){
-                return ResponseEntity.status(500).body(e.getMessage());
+                try (Connection connection = sql2o.open()) {
+                    connection.rollback();
+                } catch (Exception rollbackException) {
+                    e.addSuppressed(rollbackException);
+                }
+                return ResponseEntity.status(500).body("Error al actualizar la tarea: " + e.getMessage());
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se encuentra autorizado");
