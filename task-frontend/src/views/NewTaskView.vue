@@ -50,7 +50,7 @@ export default{
 				user_id: '',
 				title: '',
 				description: '', 
-				experation_date: '',
+				expiration_date: '',
 				state: 'pendiente'
 			}
 		}
@@ -58,14 +58,20 @@ export default{
 	methods:{
 		async saveTask(){
 			try{
-				this.task.user_id = sessionStorage.getItem('userId');
-				const token = sessionStorage.getItem('user')
-				const response = await axios.post(`http://localhost:8080/api/task`, this.task, 
-				{ params:{
-					token: token}});
-				console.log(response.data);
-				window.alert("Tarea creada exitosamente");
-				this.$router.push("/tasks");
+				const date = new Date();
+				const formattedDate = date.toISOString().split('T')[0];
+				if(this.task.expiration_date < formattedDate){
+					window.alert("No se puede crear una tarea para antes de hoy")
+				}else{
+					this.task.user_id = sessionStorage.getItem('userId');
+					const token = sessionStorage.getItem('user');
+					const response = await axios.post(`http://localhost:8080/api/task`, this.task, 
+					{ params:{
+						token: token}});
+					console.log(response.data);
+					window.alert("Tarea creada exitosamente");
+					this.$router.push("/tasks");
+				}
 			} catch(error){
 				console.log(error)
 			}

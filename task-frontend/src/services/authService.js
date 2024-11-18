@@ -1,24 +1,45 @@
-class AuthService{
-	login(userId,user){
-		sessionStorage.setItem('userId', userId);
-		sessionStorage.setItem('logged', 1);
-		sessionStorage.setItem('user', user)
-	}
-	logout(){
-		sessionStorage.removeItem('userId');
-		sessionStorage.removeItem('user')
-		sessionStorage.setItem('logged', 0);
-	}
-	isLogged(){
-		if(sessionStorage.getItem('logged') == 0){
-			return false;
-		}else{
-			return true;
-		}
-	}
-	getUserId(){
-		return sessionStorage.getItem('userId')
-	}
+import { reactive } from "vue";
+
+class AuthService {
+  constructor() {
+    // Reactive state
+    this.state = reactive({
+      userId: sessionStorage.getItem("userId") || null,
+      logged: sessionStorage.getItem("logged") || false,
+      user: sessionStorage.getItem("user") || null,
+    });
+  }
+
+  login(userId, user) {
+    sessionStorage.setItem("userId", userId);
+    sessionStorage.setItem("logged", "1");
+    sessionStorage.setItem("user", user);
+
+    // Update reactive state
+    this.state.userId = userId;
+    this.state.logged = true;
+    this.state.user = user;
+  }
+
+  logout() {
+    sessionStorage.removeItem("userId");
+    sessionStorage.removeItem("user");
+    sessionStorage.setItem("logged", "0");
+
+    // Update reactive state
+    this.state.userId = null;
+    this.state.logged = false;
+    this.state.user = null;
+  }
+
+  isLogged() {
+		console.log(this.state.logged)
+    return this.state.logged;
+  }
+
+  getUserId() {
+    return this.state.userId;
+  }
 }
 
 export const auth = new AuthService();

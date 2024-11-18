@@ -7,9 +7,6 @@
     </p>
     <div class="features">
     </div>
-    <footer>
-      <p>© 2024 Maxito chupapi. Todos los derechos reservados.</p>
-    </footer>
   </div>
 </template>
 
