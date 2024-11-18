@@ -1,4 +1,3 @@
-import { format, isWithinInterval, addDays  } from 'date-fns'
 
 <template>
   <h2>Mis Tareas</h2>
@@ -57,6 +56,7 @@ export default {
   },
   created() {
     this.getTasks();
+	this.checkTasksExpiringSoon();
   },
   methods: {
     async filterTasksByState() {
@@ -152,7 +152,34 @@ export default {
       this.stateFilter = 'pendiente';
       this.searchWord = '';
       this.getTasks();  // Obtener todas las tareas nuevamente
-    }
+    },
+
+	async checkTasksExpiringSoon() {
+   await this.getTasks();  // Asegúrate de que las tareas están cargadas
+
+   if (!Array.isArray(this.tasks) || this.tasks.length === 0) {
+     console.error("Las tareas no están disponibles o no son un array válido");
+     return;
+   }
+
+   const today = new Date();
+   const twoDaysFromNow = new Date(today);
+   twoDaysFromNow.setDate(today.getDate() + 1);
+
+   const expiringTasks = this.tasks.filter(task => {
+     if (!task.expiration_date) return false;
+     const taskDate = new Date(task.expiration_date);
+     return taskDate >= today && taskDate <= twoDaysFromNow;
+   });
+
+   if (expiringTasks.length > 0) {
+     expiringTasks.forEach(task => {
+       alert(`La tarea "${task.title}" expirará pronto el ${task.expiration_date}`);
+     });
+   } else {
+     alert("No hay tareas que expiren en los próximos 2 días.");
+   }
+}
   }
 };
 </script>

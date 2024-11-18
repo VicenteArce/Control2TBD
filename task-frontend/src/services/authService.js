@@ -6,10 +6,11 @@ class AuthService{
 	}
 	logout(){
 		sessionStorage.removeItem('userId');
+		sessionStorage.removeItem('user')
 		sessionStorage.setItem('logged', 0);
 	}
 	isLogged(){
-		if(sessionStorage.getItem('logged') === 0){
+		if(sessionStorage.getItem('logged') == 0){
 			return false;
 		}else{
 			return true;
