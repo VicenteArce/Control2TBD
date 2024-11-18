@@ -1,5 +1,5 @@
 # Control 2 - TBD
-## Este control fue desarrollado por el grupo N°5.
+## Este control fue desarrollado por el grupo N°6.
 ### Integrantes de grupo 6:
 * Mohamed Al-Marzuk 
 * Vicente Arce
