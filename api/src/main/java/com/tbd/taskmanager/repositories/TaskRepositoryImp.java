@@ -11,6 +11,7 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import java.sql.SQLException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -173,6 +174,27 @@ public class TaskRepositoryImp implements TaskRepository {
         }
     }
 
+    /*
+    @Override
+    public ResponseEntity<List<Object>> getTaskPendingNotified(String token) {
+        if (!jwtMiddlewareService.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    List.of("No autorizado")
+            );
+        }
+        try (Connection connection = sql2o.open()) {
+            List<TaskModel> tasks = connection.createQuery("SELECT * FROM tasks WHERE notification_sent = false;")
+                    .executeAndFetch(TaskModel.class);
+            List<Object> result = (List) tasks;
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    List.of(e.getMessage())
+            );
+        }
+    }
+    */
+
     // Update
     @Override
     public ResponseEntity<Object> updateTask(int task_id, TaskModel task, String token) {
@@ -247,6 +269,23 @@ public class TaskRepositoryImp implements TaskRepository {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se encuentra autorizado");
     }
 
+    /*
+    public ResponseEntity<Object> notifyTask(int task_id, String token) {
+        if (jwtMiddlewareService.validateToken(token)) {
+            try (Connection connection = sql2o.open()) {
+                connection.createQuery("UPDATE task SET notificada = true WHERE task_id = :task_id")
+                        .addParameter("task_id", task_id)
+                        .executeUpdate();
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                return ResponseEntity.status(500).body(e.getMessage());
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se encuentra autorizado");
+    }
+    */
+
+
 
 
     // Delete
@@ -264,6 +303,38 @@ public class TaskRepositoryImp implements TaskRepository {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se encuentra autorizado");
     }
+
+    //Notificar tarea
+    /*
+    // Verifica si la fecha de vencimiento está cerca
+    public boolean vaExpirar(String expirationDate) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expiration = LocalDateTime.parse(expirationDate);
+
+        // La fecha de vencimiento está a menos de 24 horas
+        return expiration.isBefore(now.plusDays(1)) && expiration.isAfter(now);
+    }
+
+    // Función que verifica y envía notificación si es necesario
+    public void noticarTareas() {
+        List<TaskModel> tasks = getTaskPendingNotified();
+
+        for (TaskModel task : tasks) {
+            if (vaExpirar(task.getExpiration_date())) {
+                sendNotification(task);
+            }
+        }
+    }
+
+
+    // Función que envía la notificación
+
+    public void sendNotification(TaskModel task) {
+        // Código para enviar la notificación
+        System.out.println("Notificación enviada para la tarea: " + task.getTask_id());
+    }
+    */
+
 
 
 
